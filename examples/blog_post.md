@@ -6,7 +6,8 @@ What are agents exactly? How are they built and trained? How are they related to
 
 An agent is an LLM trained to interact with the outside world, plus a code environment that allows it to do so. It acts through predicting text that activates so-called tools [9 toolformer], like a programmer would use an API. Tools are functions in a programming language that accept arguments, perform some meaningful logic, and return outputs. The agent achieves its task by interleaving multiple rounds of reasoning (summarizing, making a plan, taking decisions…) and tool calling. Tools can do two things: first, get useful information to inform decision making or return to the user; second, they can change the state of the world, like when ordering groceries or sending an email.
 
-[hero image]
+<script src="https://cdn.jsdelivr.net/gh/adaptive-ml/blog-components/components/agent-viz.js"></script>
+<agent-workflow></agent-workflow>
 
 ---
 
