@@ -10,13 +10,19 @@
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
-        const markdown = `
-# Markdown Test
-
-<agent-workflow></agent-workflow>
-        `.trim();
-        marked.setOptions({ sanitize: false });
-        document.getElementById('content').innerHTML = marked.parse(markdown);
+        async function loadMarkdown() {
+            try {
+                const response = await fetch('../blog_post.md');
+                const markdown = await response.text();
+                marked.setOptions({ sanitize: false });
+                document.getElementById('content').innerHTML = marked.parse(markdown);
+            } catch (error) {
+                console.error('Error loading markdown:', error);
+                document.getElementById('content').innerHTML =
+                    '<p>Error loading markdown. Make sure to run a local server (e.g., <code>npm run dev</code>)</p>';
+            }
+        }
+        loadMarkdown();
     </script>
 </body>
 </html>
