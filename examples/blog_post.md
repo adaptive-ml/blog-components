@@ -1,10 +1,10 @@
 # Agents explained
 
-Everyone is talking about AI agents. Frontier labs have put out tooling for developers to build them [[1](https://openai.com/index/new-tools-for-building-agents/), 2, 3], 2025 has been called the year of agents [4], they are the subject of widespread social media commentary [5] and blow-your-mind demos [6 cc, 7 codex, 8 chatgpt atlas].
+Everyone is talking about AI agents. Frontier labs have put out tooling for [developers](https://openai.com/index/new-tools-for-building-agents/) [to](https://openai.com/index/introducing-agentkit/) [build](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills) [them](https://www.anthropic.com/engineering/building-agents-with-the-claude-agent-sdk). 2025 has been called the [year of agents](https://x.com/gdb/status/1923541152508281329), they are the subject of widespread [social media commentary]( https://x.com/karpathy/status/1979644538185752935) and blow-your-mind [products](http://youtube.com/watch?v=6eBSHbLKuN0) and [demos](https://www.youtube.com/live/8UWKxJbjriY?si=XpSQ1-oMWalBUC4f&t=835).
 
 What are agents exactly? How are they built and trained? How are they related to previous tech like large language models (LLM) or chatbots?
 
-An agent is an LLM trained to interact with the outside world, plus a code environment that allows it to do so. It acts through predicting text that activates so-called tools [9 toolformer], like a programmer would use an API. Tools are functions in a programming language that accept arguments, perform some meaningful logic, and return outputs. The agent achieves its task by interleaving multiple rounds of reasoning (summarizing, making a plan, taking decisions…) and tool calling. Tools can do two things: first, get useful information to inform decision making or return to the user; second, they can change the state of the world, like when ordering groceries or sending an email.
+An agent is an LLM trained to interact with the outside world, plus a code environment that allows it to do so. It acts through predicting text that activates so-called [tools](https://ai.meta.com/research/publications/toolformer-language-models-can-teach-themselves-to-use-tools/), like a programmer would use an API. Tools are functions in a programming language that accept arguments, perform some meaningful logic, and return outputs. The agent achieves its task by interleaving multiple rounds of reasoning (summarizing, making a plan, taking decisions) and tool calling. Tools can do two things: first, get useful information to inform decision making or return to the user; second, they can change the state of the world, like when ordering groceries or sending an email.
 
 <script src="https://cdn.jsdelivr.net/gh/adaptive-ml/blog-components/components/agent-viz.js"></script>
 <agent-workflow></agent-workflow>
@@ -17,15 +17,15 @@ Suppose you are in Copenhagen for a few days and asking an agent to plan a weeke
 
 It will look at the weather for the next days, use this to search for activities in the city, check websites to learn what events are happening and opening times, and finally suggest a nice plan for you.
 
-[show overall flow, same as hero?]
+[show overall flow, same as hero? maybe show the final output in the image]
 
 First, your agent will start planning its research. This is similar to the way reasoning models approach a complex problem by decomposing it in a few steps.
 
 [show plan]
 
-The agent will then execute its plan, getting the information it needs from the tools it’s executing. But tokens are the only thing LLMs can read, the individual numbers that encode text. How are the are tools, the plan, the past context given to the model to read as tokens, and how do we run tools, plan or respond to the user from token output? Agents are similar to chatbots, where conversation history is kept as a list of *turns* with associated roles (system, user, assistant).
+The agent will then execute its plan, getting the information it needs from the tools it’s executing. But the only thing LLMs can read are [tokens](), the individual numbers that encode text. How are the are tools, the plan, the past context given to the model to read as tokens, and how do we run tools, plan or respond to the user from token output? Agents are similar to chatbots, where conversation history is kept as a list of *turns* with associated roles (system, user, assistant).
 
-Tool names and definitions are added to the system turn, so the model has them in context and knows when to use them. User turns will encode user queries, reasoning and planning will be encoded as an assistant turn, and tool calls and responses will each get their own specific turn type. To convert from a list of turns to a sequence of tokens, the application will use the model’s chat template, a specialized piece of code shipped with the model.
+Tool names and definitions are added to the system turn, so the model has them in context and knows when to use them. User turns will encode user queries, reasoning and planning will be encoded as an assistant turn, and tool [calls and](https://huggingface.co/docs/transformers/main/en/chat_templating) responses will each get their own specific turn type. To convert from a list of turns to a sequence of tokens, the application will use the model’s [chat template](https://huggingface.co/docs/transformers/main/en/chat_templating), a specialized piece of code shipped with the model.
 
 [show an image of flattening turns into tokens]
 
