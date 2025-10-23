@@ -1,0 +1,32 @@
+/* Agent Workflow Colors
+ * Use these classes or CSS custom properties to style blog content
+ * matching the visualization component's color scheme
+ */
+
+:root {
+  --agent-user: #10b981;
+  --agent-thinking: #f59e0b;
+  --agent-tool: #8b5cf6;
+  --agent-response: #06b6d4;
+  --agent-syntax: #94a3b8;
+}
+
+.agent-user {
+  color: var(--agent-user);
+}
+
+.agent-thinking {
+  color: var(--agent-thinking);
+}
+
+.agent-tool {
+  color: var(--agent-tool);
+}
+
+.agent-response {
+  color: var(--agent-response);
+}
+
+.agent-syntax {
+  color: var(--agent-syntax);
+}
