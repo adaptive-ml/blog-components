@@ -44,6 +44,8 @@ The weather looks sunny and warm this weekend, so the model could search for out
 
 [search tool illustration]
 
+<agent-workflow interactive="false" step="4" expanded="true"></agent-workflow>
+
 After a few additional searches the model will have seen enough content to give you a few alternatives on how to best enjoy the city.
 
 [show the final answer]
