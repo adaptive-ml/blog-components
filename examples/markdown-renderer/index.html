@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Markdown Test</title>
+    <script src="https://cdn.jsdelivr.net/gh/adaptive-ml/blog-components/components/agent-viz.js"></script>
+</head>
+<body>
+    <div id="content"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        const markdown = `
+# Markdown Test
+
+<agent-workflow></agent-workflow>
+        `.trim();
+        marked.setOptions({ sanitize: false });
+        document.getElementById('content').innerHTML = marked.parse(markdown);
+    </script>
+</body>
+</html>
