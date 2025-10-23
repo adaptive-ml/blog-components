@@ -64,8 +64,12 @@ For the complex workflows that agents require, LLMs need specific capabilities t
 
 You can't get this by imitating existing data, as [pretraining](https://openai.com/index/language-unsupervised/) and [supervised fine tuning](https://platform.openai.com/docs/guides/supervised-fine-tuning) do: this data does’t exist! Additionally, it is hard to collect at scale in a format models can use. This is why agent training is mostly done with reinforcement learning. Since RL allows you to learn from experience, models can generate their own data and the feedback teaches them what to pursue or avoid. For instance, when the model makes a formatting error, RL teaches it to avoid doing this in the future:
 
-<!-- TODO get the  -->
-<agent-workflow interactive="false" step="3" expanded="true"></agent-workflow>
+
+<agent-workflow
+      interactive="false"
+      step="2"
+      expanded="true"
+      advanced-content='{"get-weather": "<|im_start|>assistant\n<tool_call>\n{\n  \"name\": \"get_weather\",\n  \"arguments\": \"<span style=\"text-decoration: wavy underline red;\">Copenhagen</span>\"\n}\n</tool_call><|im_end|>\n\n<span style=\"color: red; font-style: italic;\">This tool call uses the wrong format and parsing will fail!</span>"}'></agent-workflow>
 
 RL has also been instrumental in [teaching](https://openai.com/o1/) [models](https://arxiv.org/abs/2501.12948) how to reason: reasoning ability [naturally emerges](https://www.philschmid.de/mini-deepseek-r1) from the combination of [chain-of-thought prompting](https://www.promptingguide.ai/techniques/cot) and RL training. This training type also reinforces agentic capabilities, since they are useful to complete long tasks and ultimately increase rewards. Today, all LLM releases (whether [frontier](https://openai.com/index/introducing-gpt-5/) or [open-source](https://arxiv.org/pdf/2505.09388)) include an extensive agentic RL training phase. This has powered impressive and sustained progress on agent abilities in the past two years, as seen in the sort of software tasks they can perform on their own. For instance, [METR](https://metr.org/) measures the [average time it takes for a human](https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/) to perform tasks that agents are mastering over time, and this metric is growing exponentially:
 
