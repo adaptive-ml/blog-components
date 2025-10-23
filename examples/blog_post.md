@@ -62,7 +62,7 @@ For the complex workflows that agents require, LLMs need specific capabilities t
 
 <!-- Would be nice to show an agent getting confused here -->
 
-You can't get this by imitating existing data, as [pretraining](https://openai.com/index/language-unsupervised/) and [supervised fine tuning](https://platform.openai.com/docs/guides/supervised-fine-tuning) do: this data does’t exist! Additionally, it is hard to collect at scale in a format models can use. This is why agent training is mostly done with reinforcement learning. Since RL allows you to learn from experience, models can generate their own data and the feedback teaches them what to pursue or avoid. For instance, when the model makes a formatting error, RL teaches it to avoid doing this in the future:
+You can't get this by imitating existing data, as [pretraining](https://openai.com/index/language-unsupervised/) and [supervised fine tuning](https://platform.openai.com/docs/guides/supervised-fine-tuning) do: this data does’t exist! Additionally, it is hard to collect at scale in a format models can use. This is why agent training is mostly done with reinforcement learning. Since RL allows you to learn from experience, models can generate their own data and the feedback teaches them what to pursue or avoid. For instance, when the model makes a <span style="color: red; font-style: italic;">formatting error</span>, RL teaches it to avoid doing this in the future:
 
 
 <agent-workflow
