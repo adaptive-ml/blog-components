@@ -58,14 +58,14 @@ p {
 
 /* Links */
 a {
-    color: #3b82f6;
-    text-decoration: none;
-    transition: color 0.2s ease;
+    color: #2c3e50;
+    font-weight: 500;
+    text-decoration: underline;
+    transition: opacity 0.2s ease;
 }
 
 a:hover {
-    color: #2563eb;
-    text-decoration: underline;
+    opacity: 0.7;
 }
 
 /* Lists */
@@ -212,4 +212,3 @@ em, i {
         font-size: 0.9em;
     }
 }
-
