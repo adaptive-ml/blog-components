@@ -1,26 +1,20 @@
 {
-  "name": "@adaptive-ml/blog-components",
-  "version": "1.0.0",
-  "description": "Portable web components and interactive visualizations for blog posts and articles",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/adaptive-ml/blog-components.git"
-  },
-  "keywords": [
-    "web-components",
-    "visualization",
-    "blog",
-    "interactive",
-    "educational"
-  ],
-  "license": "MIT",
-  "scripts": {
-    "dev": "serve ."
-  },
-  "devDependencies": {
-    "serve": "^14.2.4"
-  },
-  "exports": {
-    "./agent-viz": "./components/agent-viz.js"
-  }
+    "name": "@adaptive-ml/blog-components",
+    "version": "0.2.0",
+    "description": "Portable web components and interactive visualizations for blog posts and articles",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/adaptive-ml/blog-components.git"
+    },
+    "keywords": [
+        "web-components",
+        "visualization",
+        "blog",
+        "interactive",
+        "educational"
+    ],
+    "license": "MIT",
+    "exports": {
+        "./workflow-viz": "./components/workflow-viz.js"
+    }
 }
