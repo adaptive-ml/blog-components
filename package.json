@@ -21,6 +21,6 @@
     "serve": "^14.2.4"
   },
   "exports": {
-    "./agent-viz": "./components/agent-viz.js"
+    "./workflow-viz": "./components/workflow-viz.js"
   }
 }
