@@ -72,7 +72,7 @@ You can't get this by imitating existing data, as [pretraining](https://openai.c
 
 RL has also been instrumental in [teaching](https://openai.com/o1/) [models](https://arxiv.org/abs/2501.12948) how to reason: reasoning ability [naturally emerges](https://www.philschmid.de/mini-deepseek-r1) from the combination of [chain-of-thought prompting](https://www.promptingguide.ai/techniques/cot) and RL training. This training type also reinforces agentic capabilities, since they are useful to complete long tasks and ultimately increase rewards. Today, all LLM releases (whether [frontier](https://openai.com/index/introducing-gpt-5/) or [open-source](https://arxiv.org/pdf/2505.09388)) include an extensive agentic RL training phase. This has powered impressive and sustained progress on agent abilities in the past two years, as seen in the sort of software tasks they can perform on their own. For instance, [METR](https://metr.org/) measures the [average time it takes for a human](https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/) to perform tasks that agents are mastering over time, and this metric is growing exponentially:
 
-![METR](/examples/assets/metr.png)
+![METR](../assets/metr.png)
 
 ### What's next?
 
