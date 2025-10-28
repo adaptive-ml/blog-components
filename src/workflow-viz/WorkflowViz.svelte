@@ -10,17 +10,22 @@
 
 <script>
     import { onMount } from "svelte";
-    import { Code } from "carbon-icons-svelte";
+    import Code from "carbon-icons-svelte/lib/Code.svelte";
+    import User from "carbon-icons-svelte/lib/User.svelte";
+    import Ai from "carbon-icons-svelte/lib/Ai.svelte";
+    import BuildTool from "carbon-icons-svelte/lib/BuildTool.svelte";
+    import Chat from "carbon-icons-svelte/lib/Chat.svelte";
 
-    async function loadIcon(iconName) {
-        if (!iconName) return Code;
+    const iconMap = {
+        Code,
+        User,
+        Ai,
+        BuildTool,
+        Chat
+    };
 
-        try {
-            const module = await import("carbon-icons-svelte");
-            return module[iconName] || Code;
-        } catch {
-            return Code;
-        }
+    function loadIcon(iconName) {
+        return iconMap[iconName] || Code;
     }
 
     const nodeSpacing = 56;
@@ -217,30 +222,17 @@
     }
 
     onMount(() => {
+        stepsWithIcons = processedSteps.map(step => ({
+            ...step,
+            icon: loadIcon(step.icon)
+        }));
+
+        if (!isInteractive) return;
+
         let destroyed = false;
 
-        Promise.all(
-            processedSteps.map(async (step) => {
-                const icon = await loadIcon(step.icon);
-                return { ...step, icon };
-            })
-        ).then((loadedSteps) => {
-            if (!destroyed) {
-                stepsWithIcons = loadedSteps;
-            }
-        });
-
-        if (!isInteractive) {
-            return () => {
-                destroyed = true;
-            };
-        }
-
         loadAnimations().then((gsapLib) => {
-            if (destroyed || !gsapLib) {
-                return;
-            }
-
+            if (destroyed || !gsapLib) return;
             previousStep = currentStep;
         });
 

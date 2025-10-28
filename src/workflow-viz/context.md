@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Svelte 5 component for interactive workflow visualization in blog posts. Builds as a standalone IIFE web component.
+Svelte 5 component for interactive workflow visualization. Builds as standalone IIFE web component (136KB).
 
 ## Layout
 
@@ -10,25 +10,25 @@ Svelte 5 component for interactive workflow visualization in blog posts. Builds 
 workflow-viz/
 ├── context.md  # This file
 ├── WorkflowViz.svelte  # Main component
-├── main.js  # Build entry (exports component)
+├── main.js  # Build entry
 ├── vite.config.js  # Build config (IIFE format)
 ├── svelte.config.js  # Svelte compiler config
-└── package.json  # Dependencies (Svelte 5, GSAP, Carbon icons)
+└── package.json  # Dependencies
 ```
 
 ## Scope
 
 - In-scope: Workflow visualization component, build configuration
-- Out-of-scope: Blog post content, usage examples (see blog/ and examples/)
+- Out-of-scope: Blog content, examples (see blog/ and examples/)
 
 ## Entrypoints
 
-- main.js: Imports WorkflowViz.svelte and exports as web component
-- WorkflowViz.svelte: Main component implementation
+- main.js: Exports WorkflowViz.svelte as web component
+- WorkflowViz.svelte: Main component
 
 ## Dependencies
 
-- Svelte 5 (component framework)
-- GSAP (animations)
-- carbon-icons-svelte (icons)
-- Vite + @sveltejs/vite-plugin-svelte (build tooling)
+- Svelte 5
+- GSAP (dynamic import for animations)
+- carbon-icons-svelte (direct icon imports for tree-shaking)
+- Vite + @sveltejs/vite-plugin-svelte
