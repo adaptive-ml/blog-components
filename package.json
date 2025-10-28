@@ -1,6 +1,6 @@
 {
     "name": "@adaptive-ml/blog-components",
-    "version": "1.0.0",
+    "version": "0.2.0",
     "description": "Portable web components and interactive visualizations for blog posts and articles",
     "repository": {
         "type": "git",
