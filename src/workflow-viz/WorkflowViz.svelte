@@ -59,9 +59,8 @@
 
     const nodeSpacing = 56;
     const nodeHeight = 38;
-    const nodeWidth = 152;
-    const chartHorizontalPadding = 36;
-    const baseFlowchartWidth = 210;
+    const nodeWidth = 128;
+    const chartHorizontalPadding = 32;
 
     let { interactive = true, step = 0, expanded = false } = $props();
 
@@ -72,7 +71,7 @@
     let stepsWithIcons = $state([]);
     let inlineStyles = $state("");
 
-    const flowchartWidth = Math.max(baseFlowchartWidth, nodeWidth + chartHorizontalPadding);
+    const flowchartWidth = nodeWidth + chartHorizontalPadding;
 
     let currentStep = $state(initialStep);
     let autoplay = $state(isInteractive);
@@ -302,7 +301,7 @@
 
         const interval = setInterval(() => {
             currentStep = (currentStep + 1) % stepsWithIcons.length;
-        }, 2000);
+        }, 3000);
 
         return () => {
             clearInterval(interval);
@@ -704,6 +703,7 @@
     .workflow.advanced-visible {
         --column-gap: 1.25rem;
         --workflow-columns: 3;
+        width: calc(14rem + 2 * var(--column-width) + 2 * var(--column-gap));
     }
 
     .workflow.advanced-visible .column--tier1 {
@@ -726,6 +726,7 @@
     }
 
     .column--tier1 {
+        --column-width: 14rem;
         display: flex;
         align-items: flex-start;
         justify-content: flex-start;
@@ -808,6 +809,7 @@
 
     .node__label {
         font-family: "ABC Diatype", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-size: 0.85em;
         line-height: 1.3;
         user-select: none;
     }
@@ -876,10 +878,6 @@
         border: 0;
         box-shadow: none;
         pointer-events: none;
-    }
-
-    .column--tier3 .tier3__content {
-        width: calc(var(--column-width) - 3rem);
     }
 
     .tier2__header {
@@ -1033,7 +1031,6 @@
         padding-top: 1.85rem;
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
         box-sizing: border-box;
-        width: 100%;
     }
 
     .tier3__content::-webkit-scrollbar {
