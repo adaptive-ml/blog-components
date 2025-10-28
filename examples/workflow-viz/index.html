@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorkflowViz Component - Usage Examples</title>
+
+    <!-- Load the WorkflowViz web component -->
+    <script src="../../components/workflow-viz.js"></script>
+
+    <!-- Load fonts and base styles from shared assets -->
+    <link rel="stylesheet" href="../../assets/fonts.css">
+    <link rel="stylesheet" href="../../blog/agents/assets/agent-colors.css">
+
+    <style>
+        /* Page layout and typography */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Egyptienne', Georgia, serif;
+            line-height: 1.6;
+            color: #1f2937;
+            background: #ffffff;
+            padding: 3rem 2rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #111827;
+        }
+
+        .subtitle {
+            font-size: 1.125rem;
+            color: #6b7280;
+            margin-bottom: 3rem;
+        }
+
+        h2 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            margin: 3rem 0 1rem;
+            color: #111827;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 0.5rem;
+        }
+
+        .description {
+            margin-bottom: 1.5rem;
+            color: #4b5563;
+            font-size: 1rem;
+        }
+
+        code {
+            background: #f3f4f6;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            font-family: 'ABC Diatype Mono', 'Courier New', monospace;
+            font-size: 0.875em;
+            color: #374151;
+        }
+
+        pre {
+            background: #f9fafb;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border: 1px solid #e5e7eb;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+        }
+
+        /* Example sections */
+        .example-section {
+            margin-bottom: 4rem;
+        }
+
+
+        /* Spacing for workflow components */
+        workflow-viz {
+            display: block;
+            margin: 2rem 0;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 5rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e5e7eb;
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .footer a {
+            color: #8b5cf6;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>WorkflowViz Component</h1>
+        <p class="subtitle">Interactive workflow visualization with three-tier detail levels</p>
+
+        <!-- Example 1: Interactive Workflow -->
+        <section class="example-section">
+            <h2>1. Interactive Workflow with Autoplay</h2>
+            <p class="description">
+                The default configuration creates an interactive workflow that automatically
+                progresses through steps. Users can also click nodes to navigate directly.
+            </p>
+
+            <!-- Interactive workflow with autoplay enabled -->
+            <div id="interactive-demo-container"></div>
+
+            <pre><code>&lt;workflow-viz id="demo"&gt;&lt;/workflow-viz&gt;
+
+&lt;script type="module"&gt;
+  import { exampleSteps } from './example-data.js';
+  import { customStyles } from './custom-styles.js';
+
+  const workflow = document.getElementById('demo');
+  workflow.setAttribute('steps', JSON.stringify(exampleSteps));
+  workflow.setAttribute('custom-styles', customStyles);
+  // interactive: true (default)
+  // step: 0 (default)
+  // expanded: false (default)
+&lt;/script&gt;</code></pre>
+        </section>
+
+        <!-- Example 2: Static Instances -->
+        <section class="example-section">
+            <h2>2. Static Workflow States</h2>
+            <p class="description">
+                Set <code>interactive="false"</code> to display a static snapshot of the workflow
+                at a specific step. Use <code>step="N"</code> to control which step is shown.
+            </p>
+
+            <div id="static-step-0-container"></div>
+            <div id="static-step-1-container"></div>
+            <div id="static-step-2-container"></div>
+
+            <pre><code>&lt;workflow-viz
+  id="static-step-0"
+  interactive="false"
+  step="0"&gt;
+&lt;/workflow-viz&gt;</code></pre>
+        </section>
+
+        <!-- Example 3: Expanded View -->
+        <section class="example-section">
+            <h2>3. Expanded Tier3 View</h2>
+            <p class="description">
+                Set <code>expanded="true"</code> to show the technical tier3 column by default,
+                which displays detailed syntax and implementation information.
+            </p>
+
+            <!-- Expanded view showing tier3 -->
+            <div id="expanded-demo-container"></div>
+
+            <pre><code>&lt;workflow-viz
+  id="expanded-demo"
+  interactive="false"
+  step="2"
+  expanded="true"&gt;
+&lt;/workflow-viz&gt;</code></pre>
+        </section>
+
+        <!-- Example 4: Simple Workflow -->
+        <section class="example-section">
+            <h2>4. Simple Workflow (Fewer Steps)</h2>
+            <p class="description">
+                You can use a simpler workflow with fewer steps for more compact visualizations.
+            </p>
+
+            <div id="simple-demo-container"></div>
+
+            <pre><code>// Simpler data structure
+const simpleWorkflow = [
+  {
+    id: "input",
+    label: "Input",
+    subtitle: "User provides a task",
+    color: "#10b981",
+    icon: "User",
+    tier2: `&lt;div class="content-block"&gt;...&lt;/div&gt;`,
+    tier3: `&lt;span class="role-user"&gt;...&lt;/span&gt;`
+  },
+  // ... more steps
+];</code></pre>
+        </section>
+
+        <!-- Component API Reference -->
+        <section class="example-section">
+            <h2>Component API</h2>
+            <p class="description">
+                The WorkflowViz component supports the following attributes and properties:
+            </p>
+
+            <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+                <thead>
+                    <tr style="background: #f9fafb; border-bottom: 2px solid #e5e7eb;">
+                        <th style="text-align: left; padding: 0.75rem; font-weight: 600;">Attribute</th>
+                        <th style="text-align: left; padding: 0.75rem; font-weight: 600;">Type</th>
+                        <th style="text-align: left; padding: 0.75rem; font-weight: 600;">Default</th>
+                        <th style="text-align: left; padding: 0.75rem; font-weight: 600;">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="border-bottom: 1px solid #e5e7eb;">
+                        <td style="padding: 0.75rem;"><code>steps</code></td>
+                        <td style="padding: 0.75rem;">JSON string</td>
+                        <td style="padding: 0.75rem;"><em>required</em></td>
+                        <td style="padding: 0.75rem;">Array of step objects defining the workflow</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #e5e7eb;">
+                        <td style="padding: 0.75rem;"><code>interactive</code></td>
+                        <td style="padding: 0.75rem;">boolean</td>
+                        <td style="padding: 0.75rem;">true</td>
+                        <td style="padding: 0.75rem;">Enable autoplay and click navigation</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #e5e7eb;">
+                        <td style="padding: 0.75rem;"><code>step</code></td>
+                        <td style="padding: 0.75rem;">number</td>
+                        <td style="padding: 0.75rem;">0</td>
+                        <td style="padding: 0.75rem;">Initial step index (0-based)</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #e5e7eb;">
+                        <td style="padding: 0.75rem;"><code>expanded</code></td>
+                        <td style="padding: 0.75rem;">boolean</td>
+                        <td style="padding: 0.75rem;">false</td>
+                        <td style="padding: 0.75rem;">Show tier3 column by default</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0.75rem;"><code>custom-styles</code></td>
+                        <td style="padding: 0.75rem;">string</td>
+                        <td style="padding: 0.75rem;">""</td>
+                        <td style="padding: 0.75rem;">Inline CSS for additional styling</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <div class="footer">
+            <p>
+                WorkflowViz Component |
+                <a href="https://github.com/adaptive-ml/blog-components">GitHub</a> |
+                <a href="../../">Documentation</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Initialize all workflow instances -->
+    <script type="module">
+        import { exampleSteps, simpleWorkflow } from './example-data.js';
+        import { customStyles } from './custom-styles.js';
+
+        async function initializeWorkflows() {
+            // Wait for the custom element to be defined
+            await customElements.whenDefined('workflow-viz');
+
+            // Example 1: Interactive workflow with autoplay
+            const interactiveDemo = document.createElement('workflow-viz');
+            interactiveDemo.setAttribute('steps', JSON.stringify(exampleSteps));
+            interactiveDemo.setAttribute('custom-styles', customStyles);
+            document.getElementById('interactive-demo-container').appendChild(interactiveDemo);
+
+            // Example 2: Static instances showing different steps
+            const staticStep0 = document.createElement('workflow-viz');
+            staticStep0.setAttribute('steps', JSON.stringify(exampleSteps));
+            staticStep0.setAttribute('custom-styles', customStyles);
+            staticStep0.setAttribute('interactive', 'false');
+            staticStep0.setAttribute('step', '0');
+            document.getElementById('static-step-0-container').appendChild(staticStep0);
+
+            const staticStep1 = document.createElement('workflow-viz');
+            staticStep1.setAttribute('steps', JSON.stringify(exampleSteps));
+            staticStep1.setAttribute('custom-styles', customStyles);
+            staticStep1.setAttribute('interactive', 'false');
+            staticStep1.setAttribute('step', '1');
+            document.getElementById('static-step-1-container').appendChild(staticStep1);
+
+            const staticStep2 = document.createElement('workflow-viz');
+            staticStep2.setAttribute('steps', JSON.stringify(exampleSteps));
+            staticStep2.setAttribute('custom-styles', customStyles);
+            staticStep2.setAttribute('interactive', 'false');
+            staticStep2.setAttribute('step', '2');
+            document.getElementById('static-step-2-container').appendChild(staticStep2);
+
+            // Example 3: Expanded view showing tier3
+            const expandedDemo = document.createElement('workflow-viz');
+            expandedDemo.setAttribute('steps', JSON.stringify(exampleSteps));
+            expandedDemo.setAttribute('custom-styles', customStyles);
+            expandedDemo.setAttribute('interactive', 'false');
+            expandedDemo.setAttribute('step', '2');
+            expandedDemo.setAttribute('expanded', 'true');
+            document.getElementById('expanded-demo-container').appendChild(expandedDemo);
+
+            // Example 4: Simple workflow
+            const simpleDemo = document.createElement('workflow-viz');
+            simpleDemo.setAttribute('steps', JSON.stringify(simpleWorkflow));
+            simpleDemo.setAttribute('custom-styles', customStyles);
+            document.getElementById('simple-demo-container').appendChild(simpleDemo);
+        }
+
+        initializeWorkflows();
+    </script>
+</body>
+</html>

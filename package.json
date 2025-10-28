@@ -14,12 +14,6 @@
     "educational"
   ],
   "license": "MIT",
-  "scripts": {
-    "dev": "serve ."
-  },
-  "devDependencies": {
-    "serve": "^14.2.4"
-  },
   "exports": {
     "./workflow-viz": "./components/workflow-viz.js"
   }

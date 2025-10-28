@@ -1,0 +1,15 @@
+{
+    "name": "blog-agents",
+    "version": "1.0.0",
+    "description": "Agents blog post",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "node build.js",
+        "dev": "npm run build && serve . -p 3000",
+        "start": "npm run build && serve . -p 3000"
+    },
+    "devDependencies": {
+        "serve": "^14.2.4"
+    }
+}
