@@ -95,7 +95,7 @@
         return getNodeX() + nodeWidth / 2;
     }
 
-    const topPadding = 12;
+    const topPadding = 16;
     const flowchartHeight = $derived(stepsWithIcons.length * nodeSpacing);
 
     async function loadAnimations() {
@@ -492,7 +492,7 @@
             <svg
                 bind:this={flowchartEl}
                 class="flowchart"
-                viewBox={`0 0 ${flowchartWidth} ${flowchartHeight + topPadding + 24}`}
+                viewBox={`0 0 ${flowchartWidth} ${flowchartHeight + topPadding + 28}`}
                 xmlns="http://www.w3.org/2000/svg"
             >
                 <defs>
@@ -786,17 +786,17 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 18px;
-        height: 18px;
-        border-radius: 6px;
+        width: 1.35em;
+        height: 1.35em;
+        border-radius: 0.42em;
         background: rgba(15, 23, 42, 0.05);
         color: rgba(15, 23, 42, 0.52);
         will-change: transform;
     }
 
     .node__icon :global(svg) {
-        width: 12px;
-        height: 12px;
+        width: 0.9em;
+        height: 0.9em;
     }
 
     .node__text {
