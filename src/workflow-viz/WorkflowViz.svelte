@@ -83,6 +83,7 @@
     let previousStep = 0;
     let gsapInstance;
     let gsapLoadPromise;
+    let activeTransitionTimeline;
 
     const activeStep = $derived(stepsWithIcons[currentStep] ?? stepsWithIcons[0]);
     const ActiveIcon = $derived(activeStep?.icon ?? Code);
@@ -95,7 +96,7 @@
         return getNodeX() + nodeWidth / 2;
     }
 
-    const topPadding = 18;
+    const topPadding = 12;
     const flowchartHeight = $derived(stepsWithIcons.length * nodeSpacing);
 
     async function loadAnimations() {
@@ -122,6 +123,105 @@
         return gsapInstance;
     }
 
+    function animateNodeEntrance() {
+        if (!gsapInstance || !flowchartEl) return;
+
+        const nodes = flowchartEl.querySelectorAll(".node");
+
+        gsapInstance.fromTo(
+            nodes,
+            {
+                opacity: 0,
+                y: 20,
+                scale: 0.95,
+            },
+            {
+                opacity: (index, target) => {
+                    return target.classList.contains("active") ? 1 : 0.6;
+                },
+                y: 0,
+                scale: 1,
+                duration: 0.7,
+                ease: "power3.out",
+                stagger: 0.08,
+            }
+        );
+    }
+
+    function animateNodeState(nodeEl, isActive, isInteractive = true) {
+        if (!gsapInstance || !nodeEl) return;
+
+        const rect = nodeEl.querySelector(".node-rect");
+        const icon = nodeEl.querySelector(".node__icon");
+        const content = nodeEl.querySelector(".node__content");
+
+        const timeline = gsapInstance.timeline();
+
+        if (isActive) {
+            timeline
+                .to(nodeEl, {
+                    opacity: 1,
+                    scale: 1,
+                    duration: 0.5,
+                    ease: "power2.out",
+                    overwrite: "auto",
+                }, 0)
+                .to(rect, {
+                    attr: {
+                        "stroke-opacity": 1,
+                        "stroke-width": 1.8
+                    },
+                    duration: 0.45,
+                    ease: "power2.out",
+                    overwrite: "auto",
+                }, 0)
+                .to(icon, {
+                    scale: 1.08,
+                    duration: 0.6,
+                    ease: "elastic.out(1, 0.6)",
+                    overwrite: "auto",
+                }, 0.1)
+                .to(content, {
+                    boxShadow: "0 2px 8px rgba(15, 23, 42, 0.08)",
+                    duration: 0.4,
+                    ease: "power2.out",
+                    overwrite: "auto",
+                }, 0);
+        } else {
+            const targetOpacity = isInteractive ? 0.6 : 0.1;
+
+            timeline
+                .to(nodeEl, {
+                    opacity: targetOpacity,
+                    scale: 1,
+                    duration: 0.4,
+                    ease: "power2.inOut",
+                    overwrite: "auto",
+                }, 0)
+                .to(rect, {
+                    attr: {
+                        "stroke-opacity": 0.28,
+                        "stroke-width": 1.2
+                    },
+                    duration: 0.35,
+                    ease: "power2.inOut",
+                    overwrite: "auto",
+                }, 0)
+                .to(icon, {
+                    scale: 1,
+                    duration: 0.4,
+                    ease: "power2.out",
+                    overwrite: "auto",
+                }, 0)
+                .to(content, {
+                    boxShadow: "0 0 0 rgba(15, 23, 42, 0)",
+                    duration: 0.3,
+                    ease: "power2.out",
+                    overwrite: "auto",
+                }, 0);
+        }
+    }
+
     function animateStepChange(newStep) {
         if (!gsapInstance) {
             previousStep = newStep;
@@ -132,12 +232,30 @@
             return;
         }
 
-        const newLine = flowchartEl?.querySelector(`[data-line="${newStep}"]`);
+        if (activeTransitionTimeline) {
+            activeTransitionTimeline.kill();
+        }
 
+        const previousNode = flowchartEl?.querySelector(`.node[data-step="${previousStep}"]`);
+        const newNode = flowchartEl?.querySelector(`.node[data-step="${newStep}"]`);
+
+        activeTransitionTimeline = gsapInstance.timeline();
+
+        if (previousNode) {
+            animateNodeState(previousNode, false, isInteractive);
+        }
+
+        if (newNode) {
+            activeTransitionTimeline.add(() => {
+                animateNodeState(newNode, true, isInteractive);
+            }, 0.1);
+        }
+
+        const newLine = flowchartEl?.querySelector(`[data-line="${newStep}"]`);
         if (newLine) {
             const path = newLine.querySelector(".connector-line");
             if (path) {
-                gsapInstance.fromTo(
+                activeTransitionTimeline.fromTo(
                     path,
                     { strokeDashoffset: 0 },
                     {
@@ -145,27 +263,31 @@
                         duration: 1.5,
                         ease: "linear",
                         repeat: 2,
+                        overwrite: "auto",
                     },
+                    0.2
                 );
             }
         }
 
         const tier2Content = tier2El?.querySelector(".tier2__content");
         if (tier2Content) {
-            gsapInstance.fromTo(
+            activeTransitionTimeline.fromTo(
                 tier2Content,
                 { opacity: 0, y: 10 },
-                { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" },
+                { opacity: 1, y: 0, duration: 0.5, ease: "power3.out", overwrite: "auto" },
+                0.1
             );
         }
 
         if (showAdvanced) {
             const tier3Content = tier3El?.querySelector(".tier3__content");
             if (tier3Content) {
-                gsapInstance.fromTo(
+                activeTransitionTimeline.fromTo(
                     tier3Content,
                     { opacity: 0, y: 10 },
-                    { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" },
+                    { opacity: 1, y: 0, duration: 0.5, ease: "power3.out", overwrite: "auto" },
+                    0.15
                 );
             }
         }
@@ -211,6 +333,7 @@
 
     function toggleAdvanced() {
         showAdvanced = !showAdvanced;
+        autoplay = false;
     }
 
     function handleNodeClick(event) {
@@ -237,6 +360,46 @@
         }
 
         handleNodeClick(event);
+    }
+
+    function handleNodeMouseEnter(event) {
+        if (!isInteractive || !gsapInstance) return;
+
+        const node = event.currentTarget;
+        const isActive = node.classList.contains("active");
+        if (isActive) return;
+
+        const rect = node.querySelector(".node-rect");
+
+        gsapInstance.to(rect, {
+            attr: {
+                "stroke-opacity": 0.5,
+                "stroke-width": 1.5
+            },
+            duration: 0.18,
+            ease: "power2.out",
+            overwrite: "auto",
+        });
+    }
+
+    function handleNodeMouseLeave(event) {
+        if (!isInteractive || !gsapInstance) return;
+
+        const node = event.currentTarget;
+        const isActive = node.classList.contains("active");
+        if (isActive) return;
+
+        const rect = node.querySelector(".node-rect");
+
+        gsapInstance.to(rect, {
+            attr: {
+                "stroke-opacity": 0.28,
+                "stroke-width": 1.2
+            },
+            duration: 0.18,
+            ease: "power2.out",
+            overwrite: "auto",
+        });
     }
 
     function hideSourceElements(elements) {
@@ -292,6 +455,9 @@
                 loadAnimations().then((gsapLib) => {
                     if (destroyed || !gsapLib) return;
                     previousStep = currentStep;
+                    requestAnimationFrame(() => {
+                        animateNodeEntrance();
+                    });
                 });
             }
         }
@@ -327,7 +493,7 @@
             <svg
                 bind:this={flowchartEl}
                 class="flowchart"
-                viewBox={`0 0 ${flowchartWidth} ${flowchartHeight + topPadding + 32}`}
+                viewBox={`0 0 ${flowchartWidth} ${flowchartHeight + topPadding + 24}`}
                 xmlns="http://www.w3.org/2000/svg"
             >
                 <defs>
@@ -371,6 +537,12 @@
                             : undefined}
                         onkeydown={isInteractive
                             ? handleNodeKeydown
+                            : undefined}
+                        onmouseenter={isInteractive
+                            ? handleNodeMouseEnter
+                            : undefined}
+                        onmouseleave={isInteractive
+                            ? handleNodeMouseLeave
                             : undefined}
                     >
                         <rect
@@ -567,7 +739,7 @@
 
     .node {
         opacity: 0.1;
-        transition: opacity 0.3s ease;
+        will-change: transform, opacity;
     }
 
     .node.interactive {
@@ -579,19 +751,12 @@
         opacity: 1;
     }
 
-    .node:hover .node-rect {
-        stroke-opacity: 0.35;
-    }
-
     .node:focus {
         outline: none;
     }
 
     .node-rect {
-        transition:
-            stroke-opacity 0.25s ease,
-            stroke-width 0.25s ease,
-            filter 0.25s ease;
+        will-change: stroke-opacity, stroke-width;
     }
 
     .node__foreign {
@@ -625,9 +790,7 @@
         border-radius: 6px;
         background: rgba(15, 23, 42, 0.05);
         color: rgba(15, 23, 42, 0.52);
-        transition:
-            transform 0.25s ease,
-            background 0.3s ease;
+        will-change: transform;
     }
 
     .node__icon :global(svg) {
@@ -666,10 +829,6 @@
 
     .node.active .node__subtitle {
         color: rgba(15, 23, 42, 0.6);
-    }
-
-    .node.active .node__icon {
-        transform: scale(1.06);
     }
 
     .column--tier2,
@@ -802,7 +961,7 @@
     }
 
     .tier2__content :global(.explanation) {
-        font-size: 0.9em;
+        font-size: 0.98em;
         color: rgba(15, 23, 42, 0.6);
         line-height: 1.5;
         margin: 0 0 0.75rem 0;
