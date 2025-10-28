@@ -473,7 +473,7 @@
     :host {
         display: block;
         width: 100%;
-        font-size: 0.875rem;
+        font-size: 1rem;
         color: rgba(15, 23, 42, 0.82);
     }
 
@@ -519,6 +519,7 @@
         );
         margin: 0 auto;
         font-family:
+            "ABC Diatype",
             -apple-system,
             BlinkMacSystemFont,
             "Segoe UI",
@@ -643,7 +644,7 @@
     }
 
     .node__label {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-family: "ABC Diatype", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         line-height: 1.3;
         user-select: none;
     }
@@ -771,10 +772,32 @@
         color: rgba(15, 23, 42, 0.8);
     }
 
+    @keyframes breathe {
+        0%, 100% {
+            box-shadow: 0 0 0 rgba(15, 23, 42, 0);
+            background: transparent;
+            transform: scale(1);
+        }
+        50% {
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15),
+                        0 4px 16px rgba(59, 130, 246, 0.25);
+            background: rgba(59, 130, 246, 0.08);
+            transform: scale(1.03);
+        }
+    }
+
+    .tier2__toggle:not(.active) {
+        animation: breathe 2.2s ease-in-out infinite;
+    }
+
+    .tier2__toggle:not(.active):hover {
+        animation-play-state: paused;
+    }
+
     .tier2__content {
-        font-size: 0.95em;
+        font-size: 1em;
         color: rgba(15, 23, 42, 0.75);
-        line-height: 1.65;
+        line-height: 1.4;
         margin: 0;
     }
 
@@ -834,10 +857,10 @@
 
     .tier3__content {
         position: relative;
-        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-        font-size: 0.9em;
+        font-family: "ABC Diatype Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 0.95em;
         color: rgba(15, 23, 42, 0.75);
-        line-height: 1.6;
+        line-height: 1.65;
         overflow-x: auto;
         overflow-y: auto;
         max-height: 360px;
@@ -852,6 +875,26 @@
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
         box-sizing: border-box;
         width: 100%;
+    }
+
+    .tier3__content::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+
+    .tier3__content::-webkit-scrollbar-track {
+        background: transparent;
+        border-radius: 3px;
+    }
+
+    .tier3__content::-webkit-scrollbar-thumb {
+        background: rgba(15, 23, 42, 0.12);
+        border-radius: 3px;
+        transition: background 0.2s ease;
+    }
+
+    .tier3__content::-webkit-scrollbar-thumb:hover {
+        background: rgba(15, 23, 42, 0.2);
     }
 
 </style>
