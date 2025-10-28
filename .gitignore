@@ -41,6 +41,6 @@ coverage/
 .tmp/
 temp/
 
-# Symlinks in blog posts
-blog/*/assets
+# Built files in blog posts
+blog/*/shared_assets
 blog/*/components

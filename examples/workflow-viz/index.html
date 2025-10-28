@@ -1,19 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WorkflowViz Component - Usage Examples</title>
 
-    <!-- Load the WorkflowViz web component -->
     <script src="../../components/workflow-viz.js"></script>
-
-    <!-- Load fonts and base styles from shared assets -->
     <link rel="stylesheet" href="../../assets/fonts.css">
-    <link rel="stylesheet" href="../../blog/agents/assets/agent-colors.css">
 
     <style>
-        /* Page layout and typography */
         * {
             margin: 0;
             padding: 0;
@@ -84,19 +80,15 @@
             padding: 0;
         }
 
-        /* Example sections */
         .example-section {
             margin-bottom: 4rem;
         }
 
-
-        /* Spacing for workflow components */
         workflow-viz {
             display: block;
             margin: 2rem 0;
         }
 
-        /* Footer */
         .footer {
             margin-top: 5rem;
             padding-top: 2rem;
@@ -116,12 +108,12 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>WorkflowViz Component</h1>
         <p class="subtitle">Interactive workflow visualization with three-tier detail levels</p>
 
-        <!-- Example 1: Interactive Workflow -->
         <section class="example-section">
             <h2>1. Interactive Workflow with Autoplay</h2>
             <p class="description">
@@ -129,44 +121,193 @@
                 progresses through steps. Users can also click nodes to navigate directly.
             </p>
 
-            <!-- Interactive workflow with autoplay enabled -->
-            <div id="interactive-demo-container"></div>
+            <workflow-viz>
+                <workflow-step id="user-query" label="User Query" subtitle="Plan a weekend trip..." color="#10b981"
+                    icon="User">
+                    <tier2>
+                        <div class="explanation">The user provides a natural language query.</div>
+                        <div class="content-block content-block--user">"Plan a weekend trip in Copenhagen."</div>
+                    </tier2>
+                    <tier3>
+                        <span class="syntax">&lt;|im_start|&gt;</span>
+                        <span class="role-user">user</span>
+                        Plan a weekend trip in Copenhagen
+                        <span class="syntax">&lt;|im_end|&gt;</span>
+                    </tier3>
+                </workflow-step>
+                <workflow-step id="thinking" label="Thinking" subtitle="I need to first check..." color="#f59e0b"
+                    icon="Ai">
+                    <tier2>
+                        <div class="explanation">The model generates internal reasoning to analyze the problem and plan
+                            its approach.</div>
+                        <div class="content-block content-block--thinking">
+                            To plan a weekend trip, I need weather information and activity recommendations. I'll use
+                            <code>get_weather</code> to check conditions, then <code>web_search</code> for activities.
+                        </div>
+                    </tier2>
+                    <tier3>
+                        <span class="syntax">&lt;|im_start|&gt;</span>
+                        <span class="role-response">assistant</span>
+                        <span class="role-thinking">&lt;think&gt;</span>
+                        To plan a weekend trip, I need weather information and activity recommendations. I'll use <span
+                            class="role-tool">get_weather</span> to check conditions, then <span
+                            class="role-tool">web_search</span> for activities.
+                        <span class="role-thinking">&lt;/think&gt;</span>
+                        <span class="syntax">&lt;|im_end|&gt;</span>
+                    </tier3>
+                </workflow-step>
+                <workflow-step id="get-weather" label="Weather Tool" subtitle="Checking conditions..." color="#8b5cf6"
+                    icon="BuildTool">
+                    <tier2>
+                        <div class="explanation">The agent issues a tool call with function name and structured
+                            arguments.</div>
+                        <div class="content-block content-block--tool">
+                            <pre>
+{
+  "name": "get_weather",
+  "arguments": {
+    "location": "Copenhagen, Denmark",
+    "unit": "celsius"
+  }
+}</pre>
+                        </div>
+                    </tier2>
+                    <tier3>
+                        <span class="syntax">&lt;|im_start|&gt;</span>
+                        <span class="role-response">assistant</span>
+                        <span class="role-tool">&lt;tool_call&gt;</span>
+                        {<span class="syntax">"name":</span> <span class="role-tool">"get_weather"</span>, <span
+                            class="syntax">"arguments":</span> {<span class="syntax">"location":</span> "Copenhagen,
+                        Denmark", <span class="syntax">"unit":</span> "celsius"}}
+                        <span class="role-tool">&lt;/tool_call&gt;</span>
+                        <span class="syntax">&lt;|im_end|&gt;</span>
+                        <span class="syntax">&lt;|im_start|&gt;</span>
+                        <span class="syntax">system</span>
+                        <span class="role-tool">&lt;tool_response&gt;</span>
+                        {<span class="syntax">"temperature":</span> 20, <span class="syntax">"condition":</span> "Partly
+                        Cloudy", <span class="syntax">"humidity":</span> 65, <span class="syntax">"wind_speed":</span>
+                        12}
+                        <span class="role-tool">&lt;/tool_response&gt;</span>
+                        <span class="syntax">&lt;|im_end|&gt;</span>
+                    </tier3>
+                </workflow-step>
+                <workflow-step id="web-search" label="Search Tool" subtitle="Finding activities..." color="#8b5cf6"
+                    icon="BuildTool">
+                    <tier2>
+                        <div class="explanation">The agent calls another tool to gather activity recommendations.</div>
+                        <div class="content-block content-block--tool">
+                            <pre>
+{
+  "name": "web_search",
+  "arguments": {
+    "query": "weekend activities Copenhagen"
+  }
+}</pre>
+                        </div>
+                    </tier2>
+                    <tier3>
+                        <span class="syntax">&lt;|im_start|&gt;</span>
+                        <span class="role-response">assistant</span>
+                        <span class="role-tool">&lt;tool_call&gt;</span>
+                        {<span class="syntax">"name":</span> <span class="role-tool">"web_search"</span>, <span
+                            class="syntax">"arguments":</span> {<span class="syntax">"query":</span> "weekend activities
+                        Copenhagen"}}
+                        <span class="role-tool">&lt;/tool_call&gt;</span>
+                        <span class="syntax">&lt;|im_end|&gt;</span>
+                        <span class="syntax">&lt;|im_start|&gt;</span>
+                        <span class="syntax">system</span>
+                        <span class="role-tool">&lt;tool_response&gt;</span>
+                        {<span class="syntax">"results":</span> [{<span class="syntax">"title":</span> "Copenhagen
+                        Weekend Guide", <span class="syntax">"snippet":</span> "Visit Tivoli Gardens, stroll through
+                        Nyhavn..."}]}
+                        <span class="role-tool">&lt;/tool_response&gt;</span>
+                        <span class="syntax">&lt;|im_end|&gt;</span>
+                    </tier3>
+                </workflow-step>
+                <workflow-step id="final-response" label="Final Response" subtitle="Here is a plan..." color="#06b6d4"
+                    icon="Chat">
+                    <tier2>
+                        <div class="explanation">The agent provides the final response to the user based on gathered
+                            information.</div>
+                        <div class="content-block content-block--response">
+                            "Copenhagen will be 20°C and partly cloudy this weekend. I recommend visiting Tivoli
+                            Gardens, strolling through the colorful Nyhavn waterfront, or exploring Rosenborg Castle."
+                        </div>
+                    </tier2>
+                    <tier3>
+                        <span class="syntax">&lt;|im_start|&gt;</span>
+                        <span class="role-response">assistant</span>
+                        Copenhagen will be 20°C and partly cloudy this weekend. I recommend visiting Tivoli Gardens,
+                        strolling through the colorful Nyhavn waterfront, or exploring Rosenborg Castle.
+                        <span class="syntax">&lt;|im_end|&gt;</span>
+                    </tier3>
+                </workflow-step>
+                <workflow-styles>
+                    .tier3__content .role-user { color: var(--color-user, #10b981); }
+                    .tier3__content .role-thinking { color: var(--color-thinking, #f59e0b); }
+                    .tier3__content .role-tool { color: var(--color-tool, #8b5cf6); }
+                    .tier3__content .role-response { color: var(--color-response, #06b6d4); }
+                    .tier3__content .syntax { color: var(--color-syntax, #94a3b8); }
+                </workflow-styles>
+            </workflow-viz>
 
-            <pre><code>&lt;workflow-viz id="demo"&gt;&lt;/workflow-viz&gt;
-
-&lt;script type="module"&gt;
-  import { exampleSteps } from './example-data.js';
-  import { customStyles } from './custom-styles.js';
-
-  const workflow = document.getElementById('demo');
-  workflow.setAttribute('steps', JSON.stringify(exampleSteps));
-  workflow.setAttribute('custom-styles', customStyles);
-  // interactive: true (default)
-  // step: 0 (default)
-  // expanded: false (default)
-&lt;/script&gt;</code></pre>
+            <pre><code>&lt;workflow-viz&gt;
+  &lt;workflow-step id="user-query" label="User Query" ...&gt;
+    &lt;tier2&gt;...&lt;/tier2&gt;
+    &lt;tier3&gt;...&lt;/tier3&gt;
+  &lt;/workflow-step&gt;
+  &lt;workflow-styles&gt;...&lt;/workflow-styles&gt;
+&lt;/workflow-viz&gt;</code></pre>
         </section>
 
-        <!-- Example 2: Static Instances -->
         <section class="example-section">
-            <h2>2. Static Workflow States</h2>
+            <h2>2. Static Workflow State</h2>
             <p class="description">
                 Set <code>interactive="false"</code> to display a static snapshot of the workflow
                 at a specific step. Use <code>step="N"</code> to control which step is shown.
             </p>
 
-            <div id="static-step-0-container"></div>
-            <div id="static-step-1-container"></div>
-            <div id="static-step-2-container"></div>
+            <workflow-viz interactive="false" step="2">
+                <workflow-step id="user-query" label="User Query" subtitle="Plan a weekend trip..." color="#10b981"
+                    icon="User"></workflow-step>
+                <workflow-step id="thinking" label="Thinking" subtitle="I need to first check..." color="#f59e0b"
+                    icon="Ai"></workflow-step>
+                <workflow-step id="get-weather" label="Weather Tool" subtitle="Checking conditions..." color="#8b5cf6"
+                    icon="BuildTool">
+                    <tier2>
+                        <div class="explanation">The agent issues a tool call with function name and structured
+                            arguments.</div>
+                        <div class="content-block content-block--tool">
+                            <pre>
+{
+  "name": "get_weather",
+  "arguments": {
+    "location": "Copenhagen, Denmark",
+    "unit": "celsius"
+  }
+}</pre>
+                        </div>
+                    </tier2>
+                </workflow-step>
+                <workflow-step id="web-search" label="Search Tool" subtitle="Finding activities..." color="#8b5cf6"
+                    icon="BuildTool"></workflow-step>
+                <workflow-step id="final-response" label="Final Response" subtitle="Here is a plan..." color="#06b6d4"
+                    icon="Chat"></workflow-step>
+                <workflow-styles>
+                    .tier3__content .role-user { color: var(--color-user, #10b981); }
+                    .tier3__content .role-thinking { color: var(--color-thinking, #f59e0b); }
+                    .tier3__content .role-tool { color: var(--color-tool, #8b5cf6); }
+                    .tier3__content .role-response { color: var(--color-response, #06b6d4); }
+                    .tier3__content .syntax { color: var(--color-syntax, #94a3b8); }
+                </workflow-styles>
+            </workflow-viz>
 
-            <pre><code>&lt;workflow-viz
-  id="static-step-0"
-  interactive="false"
-  step="0"&gt;
+            <pre><code>&lt;workflow-viz interactive="false" step="2"&gt;
+  &lt;workflow-step ...&gt;&lt;/workflow-step&gt;
+  ...
 &lt;/workflow-viz&gt;</code></pre>
         </section>
 
-        <!-- Example 3: Expanded View -->
         <section class="example-section">
             <h2>3. Expanded Tier3 View</h2>
             <p class="description">
@@ -174,46 +315,101 @@
                 which displays detailed syntax and implementation information.
             </p>
 
-            <!-- Expanded view showing tier3 -->
-            <div id="expanded-demo-container"></div>
+            <workflow-viz interactive="false" step="2" expanded="true">
+                <workflow-step id="user-query" label="User Query" subtitle="Plan a weekend trip..." color="#10b981"
+                    icon="User"></workflow-step>
+                <workflow-step id="thinking" label="Thinking" subtitle="I need to first check..." color="#f59e0b"
+                    icon="Ai"></workflow-step>
+                <workflow-step id="get-weather" label="Weather Tool" subtitle="Checking conditions..." color="#8b5cf6"
+                    icon="BuildTool">
+                    <tier2>
+                        <div class="explanation">The agent issues a tool call with function name and structured
+                            arguments.</div>
+                        <div class="content-block content-block--tool">
+                            <pre>
+{
+  "name": "get_weather",
+  "arguments": {
+    "location": "Copenhagen, Denmark",
+    "unit": "celsius"
+  }
+}</pre>
+                        </div>
+                    </tier2>
+                    <tier3>
+                        <span class="syntax">&lt;|im_start|&gt;</span>
+                        <span class="role-response">assistant</span>
+                        <span class="role-tool">&lt;tool_call&gt;</span>
+                        {<span class="syntax">"name":</span> <span class="role-tool">"get_weather"</span>, <span
+                            class="syntax">"arguments":</span> {<span class="syntax">"location":</span> "Copenhagen,
+                        Denmark", <span class="syntax">"unit":</span> "celsius"}}
+                        <span class="role-tool">&lt;/tool_call&gt;</span>
+                        <span class="syntax">&lt;|im_end|&gt;</span>
+                    </tier3>
+                </workflow-step>
+                <workflow-step id="web-search" label="Search Tool" subtitle="Finding activities..." color="#8b5cf6"
+                    icon="BuildTool"></workflow-step>
+                <workflow-step id="final-response" label="Final Response" subtitle="Here is a plan..." color="#06b6d4"
+                    icon="Chat"></workflow-step>
+                <workflow-styles>
+                    .tier3__content .role-user { color: var(--color-user, #10b981); }
+                    .tier3__content .role-thinking { color: var(--color-thinking, #f59e0b); }
+                    .tier3__content .role-tool { color: var(--color-tool, #8b5cf6); }
+                    .tier3__content .role-response { color: var(--color-response, #06b6d4); }
+                    .tier3__content .syntax { color: var(--color-syntax, #94a3b8); }
+                </workflow-styles>
+            </workflow-viz>
 
-            <pre><code>&lt;workflow-viz
-  id="expanded-demo"
-  interactive="false"
-  step="2"
-  expanded="true"&gt;
-&lt;/workflow-viz&gt;</code></pre>
+            <pre><code>&lt;workflow-viz expanded="true"&gt;...&lt;/workflow-viz&gt;</code></pre>
         </section>
 
-        <!-- Example 4: Simple Workflow -->
         <section class="example-section">
-            <h2>4. Simple Workflow (Fewer Steps)</h2>
+            <h2>4. Simple Workflow</h2>
             <p class="description">
-                You can use a simpler workflow with fewer steps for more compact visualizations.
+                A simpler workflow with fewer steps for more compact visualizations.
             </p>
 
-            <div id="simple-demo-container"></div>
-
-            <pre><code>// Simpler data structure
-const simpleWorkflow = [
-  {
-    id: "input",
-    label: "Input",
-    subtitle: "User provides a task",
-    color: "#10b981",
-    icon: "User",
-    tier2: `&lt;div class="content-block"&gt;...&lt;/div&gt;`,
-    tier3: `&lt;span class="role-user"&gt;...&lt;/span&gt;`
-  },
-  // ... more steps
-];</code></pre>
+            <workflow-viz>
+                <workflow-step id="input" label="Input" subtitle="User provides a task" color="#10b981" icon="User">
+                    <tier2>
+                        <div class="explanation">User input</div>
+                        <div class="content-block content-block--user">"Hello, world!"</div>
+                    </tier2>
+                    <tier3>
+                        <span class="role-user">Hello, world!</span>
+                    </tier3>
+                </workflow-step>
+                <workflow-step id="processing" label="Processing" subtitle="System processes..." color="#f59e0b"
+                    icon="Ai">
+                    <tier2>
+                        <div class="explanation">Processing the input</div>
+                        <div class="content-block content-block--thinking">Analyzing input...</div>
+                    </tier2>
+                    <tier3>
+                        <span class="role-thinking">Analyzing input...</span>
+                    </tier3>
+                </workflow-step>
+                <workflow-step id="output" label="Output" subtitle="Result generated" color="#06b6d4" icon="Chat">
+                    <tier2>
+                        <div class="explanation">Final output</div>
+                        <div class="content-block content-block--response">"Hello back to you!"</div>
+                    </tier2>
+                    <tier3>
+                        <span class="role-response">Hello back to you!</span>
+                    </tier3>
+                </workflow-step>
+                <workflow-styles>
+                    .tier3__content .role-user { color: var(--color-user, #10b981); }
+                    .tier3__content .role-thinking { color: var(--color-thinking, #f59e0b); }
+                    .tier3__content .role-response { color: var(--color-response, #06b6d4); }
+                </workflow-styles>
+            </workflow-viz>
         </section>
 
-        <!-- Component API Reference -->
         <section class="example-section">
             <h2>Component API</h2>
             <p class="description">
-                The WorkflowViz component supports the following attributes and properties:
+                The WorkflowViz component supports the following attributes:
             </p>
 
             <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
@@ -226,12 +422,6 @@ const simpleWorkflow = [
                     </tr>
                 </thead>
                 <tbody>
-                    <tr style="border-bottom: 1px solid #e5e7eb;">
-                        <td style="padding: 0.75rem;"><code>steps</code></td>
-                        <td style="padding: 0.75rem;">JSON string</td>
-                        <td style="padding: 0.75rem;"><em>required</em></td>
-                        <td style="padding: 0.75rem;">Array of step objects defining the workflow</td>
-                    </tr>
                     <tr style="border-bottom: 1px solid #e5e7eb;">
                         <td style="padding: 0.75rem;"><code>interactive</code></td>
                         <td style="padding: 0.75rem;">boolean</td>
@@ -250,12 +440,6 @@ const simpleWorkflow = [
                         <td style="padding: 0.75rem;">false</td>
                         <td style="padding: 0.75rem;">Show tier3 column by default</td>
                     </tr>
-                    <tr>
-                        <td style="padding: 0.75rem;"><code>custom-styles</code></td>
-                        <td style="padding: 0.75rem;">string</td>
-                        <td style="padding: 0.75rem;">""</td>
-                        <td style="padding: 0.75rem;">Inline CSS for additional styling</td>
-                    </tr>
                 </tbody>
             </table>
         </section>
@@ -263,66 +447,10 @@ const simpleWorkflow = [
         <div class="footer">
             <p>
                 WorkflowViz Component |
-                <a href="https://github.com/adaptive-ml/blog-components">GitHub</a> |
-                <a href="../../">Documentation</a>
+                <a href="https://github.com/adaptive-ml/blog-components">GitHub</a>
             </p>
         </div>
     </div>
-
-    <!-- Initialize all workflow instances -->
-    <script type="module">
-        import { exampleSteps, simpleWorkflow } from './example-data.js';
-        import { customStyles } from './custom-styles.js';
-
-        async function initializeWorkflows() {
-            // Wait for the custom element to be defined
-            await customElements.whenDefined('workflow-viz');
-
-            // Example 1: Interactive workflow with autoplay
-            const interactiveDemo = document.createElement('workflow-viz');
-            interactiveDemo.setAttribute('steps', JSON.stringify(exampleSteps));
-            interactiveDemo.setAttribute('custom-styles', customStyles);
-            document.getElementById('interactive-demo-container').appendChild(interactiveDemo);
-
-            // Example 2: Static instances showing different steps
-            const staticStep0 = document.createElement('workflow-viz');
-            staticStep0.setAttribute('steps', JSON.stringify(exampleSteps));
-            staticStep0.setAttribute('custom-styles', customStyles);
-            staticStep0.setAttribute('interactive', 'false');
-            staticStep0.setAttribute('step', '0');
-            document.getElementById('static-step-0-container').appendChild(staticStep0);
-
-            const staticStep1 = document.createElement('workflow-viz');
-            staticStep1.setAttribute('steps', JSON.stringify(exampleSteps));
-            staticStep1.setAttribute('custom-styles', customStyles);
-            staticStep1.setAttribute('interactive', 'false');
-            staticStep1.setAttribute('step', '1');
-            document.getElementById('static-step-1-container').appendChild(staticStep1);
-
-            const staticStep2 = document.createElement('workflow-viz');
-            staticStep2.setAttribute('steps', JSON.stringify(exampleSteps));
-            staticStep2.setAttribute('custom-styles', customStyles);
-            staticStep2.setAttribute('interactive', 'false');
-            staticStep2.setAttribute('step', '2');
-            document.getElementById('static-step-2-container').appendChild(staticStep2);
-
-            // Example 3: Expanded view showing tier3
-            const expandedDemo = document.createElement('workflow-viz');
-            expandedDemo.setAttribute('steps', JSON.stringify(exampleSteps));
-            expandedDemo.setAttribute('custom-styles', customStyles);
-            expandedDemo.setAttribute('interactive', 'false');
-            expandedDemo.setAttribute('step', '2');
-            expandedDemo.setAttribute('expanded', 'true');
-            document.getElementById('expanded-demo-container').appendChild(expandedDemo);
-
-            // Example 4: Simple workflow
-            const simpleDemo = document.createElement('workflow-viz');
-            simpleDemo.setAttribute('steps', JSON.stringify(simpleWorkflow));
-            simpleDemo.setAttribute('custom-styles', customStyles);
-            document.getElementById('simple-demo-container').appendChild(simpleDemo);
-        }
-
-        initializeWorkflows();
-    </script>
 </body>
+
 </html>

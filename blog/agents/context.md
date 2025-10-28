@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Blog post about agents, using workflow-viz component. Copies components and assets locally for standalone serving.
+Blog post using workflow-viz component. Build script copies components and assets locally for standalone serving.
 
 ## Layout
 
@@ -11,9 +11,9 @@ agents/
 ├── context.md  # This file
 ├── build.js  # Copies workflow-viz.js and assets from root
 ├── index.html  # Blog post entry page
-├── blog_post.md  # Markdown content
+├── blog_post.md  # Markdown content with inline workflow-viz HTML
 ├── components/  # Copied from ../../components/
-└── assets/  # Copied from ../../assets/
+└── shared_assets/  # Copied from ../../assets/
 ```
 
 ## Scope

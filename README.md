@@ -19,6 +19,8 @@ bun install
 npm run dev  # http://localhost:3000
 ```
 
+Edit blog post in `blog/agents/blog_post.md`.
+
 **Run examples:**
 ```bash
 cd examples/workflow-viz

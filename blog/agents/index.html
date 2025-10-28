@@ -5,31 +5,31 @@
     <meta charset="UTF-8">
     <title>Agents Explained</title>
     <script src="components/workflow-viz.js"></script>
-    <link rel="stylesheet" href="assets/fonts.css">
+    <link rel="stylesheet" href="shared_assets/fonts.css">
     <link rel="stylesheet" href="assets/agent-colors.css">
-    <link rel="stylesheet" href="assets/shared.css">
+    <link rel="stylesheet" href="shared_assets/shared.css">
     <link rel="stylesheet" href="style.css">
     <!-- Favicon ICO for legacy browsers -->
-    <link rel="icon" href="assets/favicon.ico" sizes="any">
+    <link rel="icon" href="shared_assets/favicon.ico" sizes="any">
 
     <!-- Standard PNG favicon sizes -->
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="48x48" href="assets/favicon-48x48.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="assets/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="shared_assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="shared_assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="shared_assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="shared_assets/favicon-96x96.png">
 
     <!-- SVG favicon for modern browsers -->
-    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    <link rel="icon" type="image/svg+xml" href="shared_assets/favicon.svg">
 
     <!-- Apple Touch Icon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="shared_assets/apple-touch-icon.png">
 
     <!-- Web app manifest -->
-    <link rel="manifest" href="assets/site.webmanifest">
+    <link rel="manifest" href="shared_assets/site.webmanifest">
 
     <!-- Android/Chrome (referenced in manifest, but can also be linked directly) -->
-    <link rel="icon" type="image/png" sizes="192x192" href="assets/web-app-manifest-192x192.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="assets/web-app-manifest-512x512.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="shared_assets/web-app-manifest-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="shared_assets/web-app-manifest-512x512.png">
 </head>
 
 <body>
@@ -37,40 +37,12 @@
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script type="module">
-        import { workflowSteps, workflowStyles } from './workflow-data.js';
-
         async function loadMarkdown() {
             try {
                 const response = await fetch('./blog_post.md');
                 const markdown = await response.text();
                 marked.setOptions({ sanitize: false });
                 document.getElementById('content').innerHTML = marked.parse(markdown);
-
-                // After markdown is loaded, set steps on all workflow-viz elements
-                const workflows = document.querySelectorAll('workflow-viz');
-                workflows.forEach(workflow => {
-                    // Check if this workflow should use custom advanced content
-                    const advancedContent = workflow.getAttribute('advanced-content');
-                    if (advancedContent) {
-                        try {
-                            const overrides = JSON.parse(advancedContent);
-                            // Create a copy of steps with overrides
-                            const stepsWithOverrides = workflowSteps.map(step => {
-                                if (overrides[step.id]) {
-                                    return { ...step, tier3: overrides[step.id] };
-                                }
-                                return step;
-                            });
-                            workflow.setAttribute('steps', JSON.stringify(stepsWithOverrides));
-                        } catch (e) {
-                            console.error('Error parsing advanced-content:', e);
-                            workflow.setAttribute('steps', JSON.stringify(workflowSteps));
-                        }
-                    } else {
-                        workflow.setAttribute('steps', JSON.stringify(workflowSteps));
-                    }
-                    workflow.setAttribute('custom-styles', workflowStyles);
-                });
             } catch (error) {
                 console.error('Error loading markdown:', error);
                 document.getElementById('content').innerHTML =

@@ -1,10 +1,6 @@
 <svelte:options
     customElement={{
         tag: "workflow-viz",
-        props: {
-            steps: { attribute: "steps", type: "String" },
-            customStyles: { attribute: "custom-styles", type: "String" },
-        },
     }}
 />
 
@@ -28,31 +24,53 @@
         return iconMap[iconName] || Code;
     }
 
+    function parseInlineContent(elements) {
+        const items = Array.from(elements ?? []);
+        const workflowSteps = items.filter(
+            (el) => el.tagName && el.tagName.toLowerCase() === "workflow-step"
+        );
+
+        if (workflowSteps.length === 0) {
+            return { steps: [], styles: "" };
+        }
+
+        const steps = workflowSteps.map(stepEl => {
+            const tier2El = stepEl.querySelector('tier2');
+            const tier3El = stepEl.querySelector('tier3');
+
+            return {
+                id: stepEl.getAttribute('id') || '',
+                label: stepEl.getAttribute('label') || '',
+                subtitle: stepEl.getAttribute('subtitle') || '',
+                color: stepEl.getAttribute('color') || '',
+                icon: stepEl.getAttribute('icon') || 'Code',
+                tier2: tier2El ? tier2El.innerHTML : '',
+                tier3: tier3El ? tier3El.innerHTML : ''
+            };
+        });
+
+        const stylesEl = items.find(
+            el => el.tagName && el.tagName.toLowerCase() === 'workflow-styles'
+        );
+        const styles = stylesEl ? stylesEl.textContent : "";
+
+        return { steps, styles };
+    }
+
     const nodeSpacing = 56;
     const nodeHeight = 38;
     const nodeWidth = 152;
     const chartHorizontalPadding = 36;
     const baseFlowchartWidth = 210;
 
-    let { interactive = true, step = 0, expanded = false, steps = [], customStyles = "" } = $props();
+    let { interactive = true, step = 0, expanded = false } = $props();
 
     const isInteractive = interactive === "false" ? false : Boolean(interactive);
     const initialStep = typeof step === "string" ? parseInt(step, 10) : step;
     const isExpandedByDefault = expanded === "false" ? false : Boolean(expanded);
 
-    const parsedSteps = typeof steps === "string"
-        ? (() => {
-            try {
-                return JSON.parse(steps);
-            } catch {
-                return [];
-            }
-        })()
-        : Array.isArray(steps) ? steps : [];
-
-    const processedSteps = parsedSteps;
-
-    let stepsWithIcons = $state(processedSteps.map(step => ({ ...step, icon: Code })));
+    let stepsWithIcons = $state([]);
+    let inlineStyles = $state("");
 
     const flowchartWidth = Math.max(baseFlowchartWidth, nodeWidth + chartHorizontalPadding);
 
@@ -221,30 +239,87 @@
         handleNodeClick(event);
     }
 
+    function hideSourceElements(elements) {
+        elements.forEach((el) => {
+            const tagName = el.tagName?.toLowerCase();
+            if (tagName === "workflow-step" || tagName === "workflow-styles") {
+                el.style.display = "none";
+                el.setAttribute("aria-hidden", "true");
+            }
+        });
+    }
+
     onMount(() => {
-        stepsWithIcons = processedSteps.map(step => ({
-            ...step,
-            icon: loadIcon(step.icon)
-        }));
+        const root = flowchartEl?.getRootNode?.();
+        const hostElement = root && "host" in root ? root.host : null;
 
-        if (!isInteractive) return;
+        if (!hostElement) {
+            console.error("workflow-viz: Could not access host element");
+            return;
+        }
 
+        const sourceContainer = root?.querySelector?.('[data-role="workflow-source"]');
+        const slotElement = sourceContainer?.querySelector?.('slot');
+
+        let initialized = false;
         let destroyed = false;
 
-        loadAnimations().then((gsapLib) => {
-            if (destroyed || !gsapLib) return;
-            previousStep = currentStep;
+        function initializeWorkflow() {
+            if (initialized) return;
+
+            const assignedElements = slotElement?.assignedElements?.({ flatten: true }) ?? [];
+            const sourceElements = assignedElements.length > 0
+                ? assignedElements
+                : Array.from(hostElement.children);
+
+            const { steps, styles } = parseInlineContent(sourceElements);
+
+            if (steps.length === 0) {
+                return;
+            }
+
+            initialized = true;
+
+            inlineStyles = styles;
+            stepsWithIcons = steps.map(step => ({
+                ...step,
+                icon: loadIcon(step.icon)
+            }));
+
+            hideSourceElements(sourceElements);
+
+            if (isInteractive) {
+                loadAnimations().then((gsapLib) => {
+                    if (destroyed || !gsapLib) return;
+                    previousStep = currentStep;
+                });
+            }
+        }
+
+        if (slotElement) {
+            slotElement.addEventListener('slotchange', initializeWorkflow);
+        }
+
+        requestAnimationFrame(() => {
+            initializeWorkflow();
         });
 
         return () => {
             destroyed = true;
+            if (slotElement) {
+                slotElement.removeEventListener('slotchange', initializeWorkflow);
+            }
         };
     });
 </script>
 
-{#if customStyles}
-    {@html `<style>${customStyles}</style>`}
+{#if inlineStyles}
+    {@html `<style>${inlineStyles}</style>`}
 {/if}
+
+<div class="workflow-source" data-role="workflow-source" aria-hidden="true">
+    <slot></slot>
+</div>
 
 <div class="workflow-wrapper">
     <div class="workflow" class:advanced-visible={showAdvanced}>
@@ -412,6 +487,10 @@
         scroll-behavior: smooth;
         scroll-snap-type: inline proximity;
         scroll-padding-inline: clamp(1.5rem, 3vw, 2.25rem);
+    }
+
+    .workflow-source {
+        display: none !important;
     }
 
     .sr-only {

@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Svelte 5 component for interactive workflow visualization. Builds as standalone IIFE web component (136KB).
+Interactive workflow visualization. Builds as standalone web component (137KB). Content defined via inline custom elements.
 
 ## Layout
 

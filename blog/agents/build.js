@@ -10,7 +10,7 @@ async function build() {
     try {
         // Create local directories
         await mkdir(join(__dirname, 'components'), { recursive: true });
-        await mkdir(join(__dirname, 'assets'), { recursive: true });
+        await mkdir(join(__dirname, 'shared_assets'), { recursive: true });
 
         // Copy component
         await copyFile(
@@ -19,7 +19,7 @@ async function build() {
         );
         console.log('✓ Copied workflow-viz.js');
 
-        // Copy assets
+        // Copy shared assets
         const assets = [
             'fonts.css',
             'shared.css',
@@ -38,7 +38,7 @@ async function build() {
         for (const asset of assets) {
             await copyFile(
                 join(__dirname, `../../assets/${asset}`),
-                join(__dirname, `assets/${asset}`)
+                join(__dirname, `shared_assets/${asset}`)
             );
             console.log(`✓ Copied ${asset}`);
         }
