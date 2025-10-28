@@ -151,7 +151,6 @@
         if (!gsapInstance || !nodeEl) return;
 
         const rect = nodeEl.querySelector(".node-rect");
-        const icon = nodeEl.querySelector(".node__icon");
         const content = nodeEl.querySelector(".node__content");
 
         const timeline = gsapInstance.timeline();
@@ -174,12 +173,6 @@
                     ease: "power2.out",
                     overwrite: "auto",
                 }, 0)
-                .to(icon, {
-                    scale: 1.08,
-                    duration: 0.6,
-                    ease: "elastic.out(1, 0.6)",
-                    overwrite: "auto",
-                }, 0.1)
                 .to(content, {
                     boxShadow: "0 2px 8px rgba(15, 23, 42, 0.08)",
                     duration: 0.4,
@@ -204,12 +197,6 @@
                     },
                     duration: 0.35,
                     ease: "power2.inOut",
-                    overwrite: "auto",
-                }, 0)
-                .to(icon, {
-                    scale: 1,
-                    duration: 0.4,
-                    ease: "power2.out",
                     overwrite: "auto",
                 }, 0)
                 .to(content, {
@@ -740,7 +727,7 @@
 
     .node {
         opacity: 0.1;
-        will-change: transform, opacity;
+        will-change: opacity;
     }
 
     .node.interactive {
@@ -791,7 +778,6 @@
         border-radius: 0.42em;
         background: rgba(15, 23, 42, 0.05);
         color: rgba(15, 23, 42, 0.52);
-        will-change: transform;
     }
 
     .node__icon :global(svg) {
