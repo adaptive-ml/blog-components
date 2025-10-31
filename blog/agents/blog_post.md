@@ -357,50 +357,13 @@ Simply put, for agents to work in the real world, two things needed to happen. F
 
 Discussions about agents are not new: the term originates from RL research ([dating to the 90s](http://incompleteideas.net/book/the-book-1st.html)) and describes any entity interacting autonomously with an environment. RL agents from before the LLM era managed to grab some [impressive achievements](https://www.youtube.com/watch?v=Lu56xVlZ40M) in [games](https://deepmind.google/research/projects/alphago/) or [specialized robotics](https://openai.com/index/solving-rubiks-cube/), but all attempts to create the kind of general-purpose agent that can complete useful tasks on your behalf [proved elusive](https://openai.com/index/universe/). This is because these agents were trained from scratch, having to learn, for instance, to fill a text field in a browser by performing random actions. Building agents on top of LLMs, which possess knowledge of the world, eliminated this problem.
 
-However, an LLM is not an agent. Base LLMs, fresh after pretraining, are not even amenable to simple instructions: they just complete text in the way that most resembles their training data (web pages and books). Hardly good behavior for tool calling! Making LLMs usable, either as chatbots or agents, requires [extensive post-training](https://www.adaptive-ml.com/post/from-zero-to-ppo). In recent years, the post-training pipeline of all foundation models, whether frontier or open-source, has started to include increasingly more agentic training, including reasoning and tool use with reinforcement learning.
+However, an LLM is not an agent. Base LLMs, fresh after pretraining, are not even amenable to simple instructions: they just complete text in the way that most resembles their training data (web pages and books). Hardly good behavior for tool calling! Making LLMs usable, either as chatbots or agents, requires [extensive post-training](https://www.adaptive-ml.com/post/from-zero-to-ppo). In recent years, the post-training pipeline of all foundation models, whether frontier or open-source, has started to include increasingly more agentic training, including reasoning and tool use with reinforcement learning. For instance, see [Qwen's 3 training pipeline](https://arxiv.org/abs/2505.09388):
 
-[kimi k2 or qwen]
-<!-- Would be nice to show an agent getting confused here -->
+![Qwen 3's training stages include extensive RL](assets/Qwen3_train.png)
 
-[Training agents to reason](https://openai.com/o1/) involves prompting the model to use additional tokens to think through the task step by step ([chain-of-thought](https://arxiv.org/abs/2201.11903)) before giving its final answer, scoring this answer and using RL to update the model accordingly. The emergent reasoning abilities that RL and chain-of-thought provide together was famously demonstrated in what [DeepSeek called the “aha” moment](https://www.philschmid.de/mini-deepseek-r1), when models gain ability to verify their answers without being trained explicitly to do so:
+[Training agents to reason](https://openai.com/o1/) involves prompting the model to use additional tokens to think through the task step by step ([chain-of-thought](https://arxiv.org/abs/2201.11903)) before giving its final answer, scoring this answer and using RL to update the model accordingly. The emergent reasoning abilities that RL and chain-of-thought provide together was famously demonstrated in what [DeepSeek called the “aha” moment](https://www.philschmid.de/mini-deepseek-r1), when models gain ability to verify their answers without being trained explicitly to do so.
 
-[Deepseek aha screencap]
-
-<!-- <workflow-viz interactive="false" step="2" expanded="true">
-<workflow-step id="user-query" label="User Query" subtitle="Plan a weekend trip..." color="#10b981" icon="User"></workflow-step>
-<workflow-step id="thinking" label="Thinking" subtitle="I need to first..." color="#f59e0b" icon="Ai"></workflow-step>
-<workflow-step id="get-weather" label="Weather Tool" subtitle="Get weather..." color="#8b5cf6" icon="BuildTool">
-<tier2>
-<div class="explanation">The agent issues a tool call with function name and arguments.</div>
-<div class="content-block content-block--tool">
-<pre>
-{
-  "name": "get_weather",
-  "arguments": {
-    "location": "Copenhagen, Denmark",
-    "unit": "celsius"
-  }
-}</pre>
-</div>
-</tier2>
-<tier3>
-<span class="syntax">&lt;|im_start|&gt;</span>
-<span class="role-response">assistant</span>
-<span class="role-tool">&lt;tool_call&gt;</span>
-{ "name": "get_weather", "arguments": "
-<span style="text-decoration: wavy underline red">Copenhagen</span>
-" }
-<span class="role-tool">&lt;/tool_call&gt;</span>
-<span class="syntax">&lt;|im_end|&gt;</span>
-<span style="color: red; font-style: italic">This tool call uses the wrong format and parsing will fail!</span>
-</tier3>
-</workflow-step>
-<workflow-step id="web-search" label="Search Tool" subtitle="Search web..." color="#8b5cf6" icon="BuildTool"></workflow-step>
-<workflow-step id="final-response" label="Final Response" subtitle="Here is a plan..." color="#06b6d4" icon="Chat"></workflow-step>
-<workflow-styles>
-.tier3__content .role-user { color: var(--color-user, #10b981); } .tier3__content .role-thinking { color: var(--color-thinking, #f59e0b); } .tier3__content .role-tool { color: var(--color-tool, #8b5cf6); } .tier3__content .role-response { color: var(--color-response, #06b6d4); } .tier3__content .syntax { color: var(--color-syntax, #94a3b8); }
-</workflow-styles>
-</workflow-viz> -->
+<!-- Deepseeks aha moment illustration is a bit dry -->
 
 Tool use training involves letting models access tools, hosted on dedicated machines during training, to complete tasks. Tool execution and task completion feedback is then used to train the model via RL. RL will teach models to use tools with the right arguments and format, and will give models experience of the sort of response these tools can provide and how they can be used to answer the task at hand: imagine learning to master a complex app like Figma without ever being able to use it!
 
@@ -411,4 +374,4 @@ RL for reasoning and tool use has powered impressive and sustained progress on a
 
 Today's agents excel at using openly available tools in general-purpose contexts; however they cannot **adapt to specific environments**, like using domain-specific knowledge or specialized tools. Building personalized assistants that can integrate deeply to your business processes will take additional work. RL taught LLMs to act as students, able to complete hard but artificial tasks. In the future, it will have an outsize role in teaching them to act as skilled and effective collaborators in the workplace**.
 
-To learn** more, check out [our work with agents](https://www.adaptive-ml.com/).
+To learn more, check out [our work with agents](https://www.adaptive-ml.com/).
